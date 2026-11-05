@@ -21,7 +21,6 @@ if not pg then
     return 
 end
 
-
 pcall(function()
     local old = pg:FindFirstChild("AriseVipV6")
     if old then old:Destroy() end
