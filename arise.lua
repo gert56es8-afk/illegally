@@ -9,8 +9,18 @@ local RS = game:GetService("ReplicatedStorage")
 local WS = workspace
 local VirtualUser = game:GetService("VirtualUser")
 
-local pg = LP:FindFirstChild("PlayerGui") or LP:WaitForChild("PlayerGui", 5)
-if not pg then warn("[ARISE] no PlayerGui"); return end
+local pg = LP:FindFirstChild("PlayerGui")
+if not pg then
+    pcall(function()
+        pg = LP:WaitForChild("PlayerGui")
+    end)
+end
+
+if not pg then 
+    warn("[ARISE] no PlayerGui"); 
+    return 
+end
+
 
 pcall(function()
     local old = pg:FindFirstChild("AriseVipV6")
