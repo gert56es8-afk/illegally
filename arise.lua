@@ -271,13 +271,18 @@ TabBar.BackgroundColor3 = C.surface
 TabBar.BorderSizePixel = 0
 TabBar.ZIndex = 3
 
-local TL = Instance.new("UIListLayout", TabBar)
+-- Контейнер для кнопок вкладок (чтобы UIListLayout не сдвигал полоску-индикатор)
+local TabHolder = Instance.new("Frame", TabBar)
+TabHolder.Size = UDim2.new(1, 0, 1, 0)
+TabHolder.BackgroundTransparency = 1
+TabHolder.ZIndex = 4
+
+local TL = Instance.new("UIListLayout", TabHolder)
 TL.FillDirection = Enum.FillDirection.Horizontal
 TL.SortOrder = Enum.SortOrder.LayoutOrder
 TL.VerticalAlignment = Enum.VerticalAlignment.Center
 
-local IndFolder = Instance.new("Folder", TabBar)
-local TabInd = Instance.new("Frame", IndFolder)
+local TabInd = Instance.new("Frame", TabBar)
 TabInd.Size = UDim2.new(0, TW - 6, 0, 3)
 TabInd.Position = UDim2.new(0, 3, 1, -3)
 TabInd.BackgroundColor3 = C.neonHi
@@ -290,7 +295,7 @@ Content.Size = UDim2.new(1, 0, 1, -119)
 Content.Position = UDim2.new(0, 0, 0, 92)
 Content.BackgroundTransparency = 1
 Content.ClipsDescendants = true
-Content.ZIndex = 2
+Content.ZIndex = 3
 
 local SBar = Instance.new("Frame", Main)
 SBar.Size = UDim2.new(1, 0, 0, 27)
@@ -342,14 +347,14 @@ local function SwitchTab(key)
 end
 
 for i, def in ipairs(TABS) do
-    local Btn = Instance.new("TextButton", TabBar)
+    local Btn = Instance.new("TextButton", TabHolder)
     Btn.Size = UDim2.new(0, TW, 1, 0)
     Btn.BackgroundTransparency = 1
     Btn.Text = def.label
     Btn.TextColor3 = C.textDim
     Btn.TextSize = 9
     Btn.Font = Enum.Font.GothamSemibold
-    Btn.ZIndex = 4
+    Btn.ZIndex = 5
     Btn.LayoutOrder = i
     TabBtns[def.key] = Btn
 
@@ -360,15 +365,19 @@ for i, def in ipairs(TABS) do
     Page.BorderSizePixel = 0
     Page.ScrollBarThickness = 3
     Page.ScrollBarImageColor3 = C.neonDim
-    Page.AutomaticCanvasSize = Enum.AutomaticSize.Y
     Page.CanvasSize = UDim2.new(0, 0, 0, 0)
     Page.Visible = false
-    Page.ZIndex = 2
+    Page.ZIndex = 3
     Pages[def.key] = Page
 
     local PL = Instance.new("UIListLayout", Page)
     PL.SortOrder = Enum.SortOrder.LayoutOrder
     PL.Padding = UDim.new(0, 6)
+
+    -- Автоматический пересчёт высоты скролла при добавлении кнопок
+    PL:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        Page.CanvasSize = UDim2.new(0, 0, 0, PL.AbsoluteContentSize.Y + 20)
+    end)
 
     local PP = Instance.new("UIPadding", Page)
     PP.PaddingLeft = UDim.new(0, 10)
