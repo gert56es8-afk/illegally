@@ -1569,29 +1569,22 @@ LP.CharacterAdded:Connect(function(c)
 end)
 
 -- ================================================================
--- ЗАПУСК МЕНЮ
+-- ЗАПУСК МЕНЮ (без заставки)
 -- ================================================================
-SwitchTab("farm")
-SetStatus("Загрузка...", C.textDim)
-
-task.delay(2.5, function()
-    pcall(function()
-        TweenService:Create(Splash, TweenInfo.new(0.6), {BackgroundTransparency = 1}):Play()
-        TweenService:Create(SplashLabel, TweenInfo.new(0.6), {TextTransparency = 1}):Play()
-        TweenService:Create(SplashSub, TweenInfo.new(0.6), {TextTransparency = 1}):Play()
-        TweenService:Create(SplashGlow, TweenInfo.new(0.6), {BackgroundTransparency = 1}):Play()
-        TweenService:Create(GlowStroke, TweenInfo.new(0.6), {Transparency = 1}):Play()
-    end)
-    task.wait(0.3)
-    pcall(function()
-        Main.Visible = true
-        FloatBtn.Visible = true
-        TweenService:Create(Main, TweenInfo.new(0.5), {BackgroundTransparency = 0}):Play()
-        TweenService:Create(MS, TweenInfo.new(0.5), {Transparency = 0.3}):Play()
-    end)
-    task.wait(0.7)
-    pcall(function() Splash:Destroy() end)
-    SetStatus("Готово — v6.6 RU", C.success)
+SG.AncestryChanged:Connect(function(_, parent)
+    warn("[ARISE] ScreenGui сменил родителя:", parent)
+end)
+SG.Destroying:Connect(function()
+    warn("[ARISE] ScreenGui удалён")
+end)
+Main:GetPropertyChangedSignal("Visible"):Connect(function()
+    warn("[ARISE] Main.Visible =", Main.Visible)
 end)
 
-print("[ARISE v6.6 RU] Успешно загружено")
+SwitchTab("farm")
+Main.BackgroundTransparency = 0
+MS.Transparency = 0.3
+Main.Visible = true
+FloatBtn.Visible = true
+SetStatus("Готово — v6.6 RU", C.success)
+print("[ARISE v6.6 RU] Загружено, родитель GUI:", SG.Parent and SG.Parent:GetFullName() or "nil")
