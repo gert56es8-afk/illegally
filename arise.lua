@@ -47,6 +47,7 @@ SG.Name = "AriseVipV6"
 SG.ResetOnSpawn = false
 SG.IgnoreGuiInset = true
 SG.DisplayOrder = 999
+SG.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 SG.Parent = guiParent
 
 -- ================================================================
